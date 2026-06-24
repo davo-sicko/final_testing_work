@@ -127,3 +127,18 @@ def test_filter_by_status_read():
     result = logic.filter_by_status("read", path=TEST_FILE)
     assert len(result) == 1
     assert result[0]["title"] == "1984"
+
+
+# --- IMPROVEMENT-001: сортировка по году издания ---
+
+def test_get_all_books_sorted_by_year():
+    logic.add_book("Дюна", "Герберт", 1965, path=TEST_FILE)
+    logic.add_book("1984", "Оруэлл", 1949, path=TEST_FILE)
+    logic.add_book("Сияние", "Кинг", 1977, path=TEST_FILE)
+    sorted_books = logic.get_all_books_sorted_by_year(path=TEST_FILE)
+    years = [b["year"] for b in sorted_books]
+    assert years == [1949, 1965, 1977]
+
+
+def test_get_all_books_sorted_by_year_empty_list():
+    assert logic.get_all_books_sorted_by_year(path=TEST_FILE) == []
