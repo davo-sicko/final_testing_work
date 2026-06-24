@@ -15,11 +15,21 @@ def show_menu():
     print("5. Редактировать книгу")
     print("6. Удалить книгу")
     print("7. Фильтр по статусу")
+    print("8. Показать книги по году издания")
     print("0. Выход")
 
 
 def handle_list():
     books = logic.get_all_books()
+    if not books:
+        print("Список пуст.")
+        return
+    for b in books:
+        print_book(b)
+
+
+def handle_list_sorted_by_year():
+    books = logic.get_all_books_sorted_by_year()
     if not books:
         print("Список пуст.")
         return
@@ -113,6 +123,7 @@ ACTIONS = {
     "5": handle_update,
     "6": handle_delete,
     "7": handle_filter,
+    "8": handle_list_sorted_by_year,
 }
 
 

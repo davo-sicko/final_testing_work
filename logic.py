@@ -8,9 +8,11 @@ def _next_id(books):
 
 
 def add_book(title, author, year, status="unread", path=DEFAULT_PATH):
-    """Добавляет книгу. Валидирует title (непустой) и year (положительное число)."""
+    """Добавляет книгу. Валидирует title и author (непустые) и year (положительное число)."""
     if not title or not title.strip():
         raise ValueError("Название книги не может быть пустым")
+    if not author or not author.strip():
+        raise ValueError("Автор не может быть пустым")
     if not isinstance(year, int) or year <= 0:
         raise ValueError("Год должен быть положительным числом")
 
@@ -31,6 +33,11 @@ def get_all_books(path=DEFAULT_PATH):
     return load_books(path)
 
 
+def get_all_books_sorted_by_year(path=DEFAULT_PATH):
+    """Возвращает книги, отсортированные по году издания (по возрастанию)."""
+    return sorted(load_books(path), key=lambda b: b["year"])
+
+
 def _find_book_index(books, book_id):
     for i, b in enumerate(books):
         if b["id"] == book_id:
@@ -38,9 +45,15 @@ def _find_book_index(books, book_id):
     raise KeyError(f"Книга с id={book_id} не найдена")
 
 
+VALID_STATUSES = ("read", "unread")
+
+
 def update_book(book_id, title=None, author=None, year=None, status=None, path=DEFAULT_PATH):
     books = load_books(path)
     idx = _find_book_index(books, book_id)
+
+    if status is not None and status not in VALID_STATUSES:
+        raise ValueError(f"Статус должен быть одним из {VALID_STATUSES}")
 
     if title is not None:
         books[idx]["title"] = title
